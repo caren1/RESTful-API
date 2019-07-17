@@ -73,7 +73,7 @@ app.route("/articles")
     );
   });
 
-/// SPECIFIC ARTICLE ///
+/// SPECIFIC ARTICLE //
 
 //GETTING A SINGLE ARTICLE//
 
@@ -87,5 +87,18 @@ app.route("/articles")
        }else{
          res.send("No articles matching that title was found");
        }
+     });
+   })
+
+   .put(function(req, res){
+     const requestedTitle = req.params.articleTitle;
+     Article.update(
+       {title: requestedTitle}, //condition
+       {title: req.body.title, content: req.body.content}, //what is it to be updated?
+       {overwrite:true},
+      function(err){
+        if(!err){
+          res.send("Successfully updated an article");
+        }
      });
    });
