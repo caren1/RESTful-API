@@ -4,6 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const ejs = require('ejs');
+const _ = require("lodash");
 
 const app = express();
 
@@ -32,6 +33,7 @@ const Article = mongoose.model("Article", articleSchema);
 
 let articles = [];
 
+/// ALL ARTICLES ///
 
 app.route("/articles")
   .get(function(req, res){
@@ -70,3 +72,20 @@ app.route("/articles")
       }
     );
   });
+
+/// SPECIFIC ARTICLE ///
+
+//GETTING A SINGLE ARTICLE//
+
+  app.route("/articles/:articleTitle")
+   .get(function(req, res){
+     const requestedTitle = req.params.articleTitle;
+     // const requestedTitleId = req.params.articleId;
+     Article.findOne({title: requestedTitle}, function(err, foundArticle){
+       if(foundArticle){
+         res.send(foundArticle);
+       }else{
+         res.send("No articles matching that title was found");
+       }
+     });
+   });
