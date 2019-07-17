@@ -79,9 +79,11 @@ app.route("/articles")
 
   app.route("/articles/:articleTitle")
    .get(function(req, res){
-     const requestedTitle = req.params.articleTitle;
+
      // const requestedTitleId = req.params.articleId;
-     Article.findOne({title: requestedTitle}, function(err, foundArticle){
+     Article.findOne(
+       {title: req.params.articleTitle},
+      function(err, foundArticle){
        if(foundArticle){
          res.send(foundArticle);
        }else{
@@ -91,9 +93,8 @@ app.route("/articles")
    })
 
    .put(function(req, res){
-     const requestedTitle = req.params.articleTitle;
      Article.update(
-       {title: requestedTitle}, //condition
+       {title: req.params.articleTitle}, //condition
        {title: req.body.title, content: req.body.content}, //what is it to be updated?
        {overwrite:true},
       function(err){
@@ -110,6 +111,19 @@ app.route("/articles")
        function(err){
          if(!err){
            res.send("Successfully updated an article");
+         }else{
+           res.send(err);
+         }
+       }
+     );
+   })
+
+   .delete(function(req, res){
+     Article.deleteOne(
+       {title: req.params.articleTitle},
+       function(err){
+         if(!err){
+           res.send("Successfully deleted an article");
          }else{
            res.send(err);
          }
